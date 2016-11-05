@@ -37,6 +37,25 @@ class Node(object):
 
         return node_segments
 
+class Node2D(Node):
+    def __init__(self, x, y):
+        super(Node2D, self).__init__()
+        self.x = x
+        self.y = y
+
+    @classmethod
+    def createGrid(cls,height,width):
+        node_grid = [[Node2D(x,y) for x in range(width)] for y in range(height)]
+        for x in range(width-1):
+            for y in range(height):
+                cls.linkNodes(node_grid[y][x],node_grid[y][x+1])
+        for x in range(width):
+            for y in range(height-1):
+                cls.linkNodes(node_grid[y][x],node_grid[y+1][x])
+
+
+        return [n for row in node_grid for n in row]
+
 def test_simple_node():
     node_number = 5
     nodes = [Node() for i in range(node_number)]
@@ -55,6 +74,15 @@ def test_direct_maze():
     segments = Node.createMaze(nodes)
     link_count = sum([len(s)-1 for s in segments])
     assert(link_count == node_number - 1)
+
+def test_grid():
+    width, height = 4, 3
+    node_grid = Node2D.createGrid(height, width)
+
+    node_count = width * height
+    assert(len(node_grid) == node_count)
+    double_counted_neighbour_count = sum([len(n.neighbours) for n in node_grid])
+    assert(double_counted_neighbour_count // 2 == (width - 1) * height + width * (height - 1))
 
 if __name__ == '__main__':
     import sys
