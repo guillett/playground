@@ -16,7 +16,7 @@ class Node(object):
     @classmethod
     def createMaze(cls,nodes):
         used_nodes, nodes_remaining, node_segments = set([nodes[0]]), set(nodes[1:]), list()
-        while len(nodes_remaining)>0:
+        while nodes_remaining:
             node_segment = deque([nodes_remaining.pop()])
             while True:
               last_node = node_segment[-1]
