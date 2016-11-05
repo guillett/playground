@@ -9,9 +9,9 @@ class Node(object):
         self.neighbours = []
 
     @classmethod
-    def linkNodes(cls,*nodes):
-        for s, e in [(s,e) for s in nodes for e in nodes if s is not e]:
-            s.neighbours.append(e)
+    def linkNodes(cls,s,e):
+        s.neighbours.append(e)
+        e.neighbours.append(s)
 
     @classmethod
     def createMaze(cls,nodes):
@@ -56,12 +56,11 @@ class Node2D(Node):
 
         return [n for row in node_grid for n in row]
 
-def test_simple_node():
-    node_number = 5
-    nodes = [Node() for i in range(node_number)]
-    Node.linkNodes(*nodes)
-    for n in nodes:
-        assert(len(n.neighbours) == node_number - 1)
+def test_simple_node_link():
+    a, b = Node(), Node()
+    Node.linkNodes(a,b)
+    for n in [a,b]:
+        assert(len(n.neighbours) == 1)
 
 def test_direct_maze():
     s = randint(1000)
@@ -70,7 +69,8 @@ def test_direct_maze():
 
     node_number = 50
     nodes = [Node() for i in range(node_number)]
-    Node.linkNodes(*nodes)
+    for s, e in [(s,e) for s in nodes for e in nodes if s is not e]:
+        Node.linkNodes(s,e)
     segments = Node.createMaze(nodes)
     link_count = sum([len(s)-1 for s in segments])
     assert(link_count == node_number - 1)
