@@ -33,7 +33,7 @@ container = MyContainer()
 
 def generate():
     mean = lambda x,y: (x+y)/2
-    segments = maze.Node.createMaze(container.nodes)
+    segments = maze.Node.create_maze(container.nodes)
     xs, ys = zip(*[(mean(s.x,e.x), mean(s.y,e.y)) for seg in segments for s,e in pairwise(seg)])
     vertex_source.data = dict(x=xs, y=ys)
 
@@ -43,7 +43,7 @@ generate_button.on_click(generate)
 controls = [x_slider, y_slider]
 
 def update():
-    container.nodes = maze.Node2D.createGrid(y_slider.value, x_slider.value)
+    container.nodes = maze.Node2D.create_grid(y_slider.value, x_slider.value)
     xs, ys = zip(*[(n.x, n.y) for n in container.nodes])
     node_source.data = dict(x=xs, y=ys)
     

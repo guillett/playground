@@ -9,12 +9,12 @@ class Node(object):
         self.neighbours = []
 
     @classmethod
-    def linkNodes(cls,s,e):
+    def link_nodes(cls,s,e):
         s.neighbours.append(e)
         e.neighbours.append(s)
 
     @classmethod
-    def createMaze(cls,nodes):
+    def create_maze(cls,nodes):
         used_nodes, nodes_remaining, node_segments = set([nodes[0]]), set(nodes[1:]), list()
         while nodes_remaining:
             node_segment = deque([nodes_remaining.pop()])
@@ -44,21 +44,21 @@ class Node2D(Node):
         self.y = y
 
     @classmethod
-    def createGrid(cls,height,width):
+    def create_grid(cls,height,width):
         node_grid = [[Node2D(x,y) for x in range(width)] for y in range(height)]
         for x in range(width-1):
             for y in range(height):
-                cls.linkNodes(node_grid[y][x],node_grid[y][x+1])
+                cls.link_nodes(node_grid[y][x],node_grid[y][x+1])
         for x in range(width):
             for y in range(height-1):
-                cls.linkNodes(node_grid[y][x],node_grid[y+1][x])
+                cls.link_nodes(node_grid[y][x],node_grid[y+1][x])
 
 
         return [n for row in node_grid for n in row]
 
 def test_simple_node_link():
     a, b = Node(), Node()
-    Node.linkNodes(a,b)
+    Node.link_nodes(a,b)
     for n in [a,b]:
         assert(len(n.neighbours) == 1)
 
@@ -70,14 +70,14 @@ def test_direct_maze():
     node_number = 50
     nodes = [Node() for i in range(node_number)]
     for s, e in [(s,e) for s in nodes for e in nodes if s is not e]:
-        Node.linkNodes(s,e)
-    segments = Node.createMaze(nodes)
+        Node.link_nodes(s,e)
+    segments = Node.create_maze(nodes)
     link_count = sum([len(s)-1 for s in segments])
     assert(link_count == node_number - 1)
 
 def test_grid():
     width, height = 4, 3
-    node_grid = Node2D.createGrid(height, width)
+    node_grid = Node2D.create_grid(height, width)
 
     node_count = width * height
     assert(len(node_grid) == node_count)
