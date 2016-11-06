@@ -3,7 +3,7 @@ from collections import deque
 
 
 class Node(object):
-    """Node object to create graph linking nodes directly through their neighbours attribute"""
+    '''Node object to create graph linking nodes directly through their neighbours attribute'''
     def __init__(self):
         super(Node, self).__init__()
         self.neighbours = []

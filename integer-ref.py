@@ -9,7 +9,7 @@ def test_big_integer_refcount():
     run_statement('sys.getrefcount(1234567)')
 
 def test_small_integers():
-    """This is a test to look at how small integers are stored and shared."""
+    '''This is a test to look at how small integers are stored and shared.'''
     #small = range(-10,3) + range(253,258)              # OK for 2.7 KO for 3.5
     small = list(range(-10,3)) + list(range(253,260))   # OK for both
     small = range(-10,260)                             # Show for range. 2.7 behaviour should be investigated
@@ -26,7 +26,7 @@ def test_small_integers():
 
 
 def test_big_integers():
-    """This is a test to know if big integers (that are dynamically allocated) are always shared."""
+    '''This is a test to know if big integers (that are dynamically allocated) are always shared.'''
     run_statement('[id(i) for i in [1000,1000,500*2]]')
     print('They are not as the location of the last item is different from the first two.\n')
 
