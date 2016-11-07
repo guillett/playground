@@ -1,6 +1,7 @@
 from numpy.random import randint, seed
 from collections import deque
 
+import unittest
 
 class Node(object):
     '''Node object to create graph linking nodes directly through their neighbours attribute'''
@@ -56,41 +57,37 @@ class Node2D(Node):
 
         return [n for row in node_grid for n in row]
 
-def test_simple_node_link():
-    a, b = Node(), Node()
-    Node.link_nodes(a,b)
-    for n in [a,b]:
-        assert(len(n.neighbours) == 1)
 
-def test_direct_maze():
-    s = randint(1000)
-    print('seed: {}'.format(s))
-    seed(s)
+class TestNode(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        s = randint(1000)
+        seed(s)
+        print('seed: {}'.format(s))
 
-    node_number = 50
-    nodes = [Node() for i in range(node_number)]
-    for s, e in [(s,e) for s in nodes for e in nodes if s is not e]:
-        Node.link_nodes(s,e)
-    segments = Node.create_maze(nodes)
-    link_count = sum([len(s)-1 for s in segments])
-    assert(link_count == node_number - 1)
+    def test_simple_node_link(self):
+        a, b = Node(), Node()
+        Node.link_nodes(a,b)
+        for n in [a,b]:
+            self.assertEqual(len(n.neighbours), 1)
 
-def test_grid():
-    width, height = 4, 3
-    node_grid = Node2D.create_grid(height, width)
+    def test_direct_maze(self):
+        node_number = 50
+        nodes = [Node() for i in range(node_number)]
+        for s, e in [(s,e) for s in nodes for e in nodes if s is not e]:
+            Node.link_nodes(s,e)
+        segments = Node.create_maze(nodes)
+        link_count = sum([len(s)-1 for s in segments])
+        self.assertEqual(link_count, node_number-1)
 
-    node_count = width * height
-    assert(len(node_grid) == node_count)
-    double_counted_neighbour_count = sum([len(n.neighbours) for n in node_grid])
-    assert(double_counted_neighbour_count // 2 == (width - 1) * height + width * (height - 1))
+    def test_grid(self):
+        width, height = 4, 3
+        node_grid = Node2D.create_grid(height, width)
+
+        node_count = width * height
+        self.assertEqual(len(node_grid), node_count)
+        double_counted_neighbour_count = sum([len(n.neighbours) for n in node_grid])
+        self.assertEqual(double_counted_neighbour_count // 2, (width - 1) * height + width * (height - 1))
 
 if __name__ == '__main__':
-    import sys
-    if len(sys.argv) == 1:
-        import re
-        for test_name in [v for v in dir() if re.match('^test_',v)]:
-            print('Running: {}'.format(test_name))
-            eval(test_name + '()')
-            print('         {}: OK'.format(test_name))
-    else:
-        print('Command line utility')
+    unittest.main(verbosity=2)
